@@ -8,8 +8,8 @@ on:
   workflow_dispatch:
 
 push:
-    paths:
-      - "data/**"
+  paths:
+    - "data/**"
 jobs:
   continuous-training:
     runs-on: ubuntu-latest
