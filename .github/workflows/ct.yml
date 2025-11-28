@@ -1,15 +1,18 @@
 name: Continuous Training Pipeline
 
 on:
-  # Run once per day at 00:00 UTC (you can change the cron)
+  # 1) Time-based trigger (every day at midnight UTC)
   schedule:
     - cron: "0 0 * * *"
-  # Allow manual trigger from GitHub UI
+
+  # 2) Manual trigger from GitHub Actions UI
   workflow_dispatch:
 
-push:
-  paths:
-    - "data/**"
+  # 3) Data-change trigger: run when anything under data/ changes
+  push:
+    paths:
+      - "data/**"
+
 jobs:
   continuous-training:
     runs-on: ubuntu-latest
@@ -28,17 +31,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      # (Optional) Override paths/configurations via env if needed
-      # env:
-      #   DATA_PATH: data/add.csv
-      #   MODEL_PATH: model.pkl
-      #   TEST_SIZE: "0.4"
-      #   RANDOM_STATE: "42"
-
       - name: Run continuous training script
         run: python continuous_training.py
 
-      - name: Upload model and metrics as artifact
+      - name: Upload trained model and metrics
         uses: actions/upload-artifact@v4
         with:
           name: model-and-metrics
